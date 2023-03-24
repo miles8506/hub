@@ -1,0 +1,21 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const {
+  APP_PORT,
+  DATABASE_HOST,
+  DATABASE_USER,
+  DATABASE_NAME,
+  DATABASE_PASSWORD,
+  DATABASE_LIMIT
+} = process.env
+
+export {
+  APP_PORT,
+  DATABASE_HOST,
+  DATABASE_USER,
+  DATABASE_NAME,
+  DATABASE_PASSWORD,
+  DATABASE_LIMIT
+}
