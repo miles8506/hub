@@ -1,9 +1,9 @@
 import Router from 'koa-router'
 import userController from '../controller/user.controller'
-import { registryMiddleware } from '../middleware/user.middleware'
+import { registryMiddleware, handlePassword } from '../middleware/user.middleware'
 
 const router = new Router({ prefix: '/users' })
 
-router.post('/users', registryMiddleware, userController.create)
+router.post('/users', registryMiddleware, handlePassword, userController.create)
 
 export default router
