@@ -1,10 +1,10 @@
 import app from './app/app'
 import './app/database'
 import userRouter from './router/user.router'
-import { handleError } from './app/error-handle'
+import { handleError } from './app/handle-error'
 import { APP_PORT } from './app/config'
 
-import bodyParser  from 'koa-bodyparser'
+import bodyParser from 'koa-bodyparser'
 
 app.use(bodyParser())
 app.use(userRouter.routes())
