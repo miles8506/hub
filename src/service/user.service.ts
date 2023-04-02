@@ -1,18 +1,18 @@
 import pool from '../app/database'
 
-import type { IUserRegistryRequest, IUser } from '../types/user.type'
+import type { IUser, IUserRegistryRequest } from '../types/user.type'
 
 class UserService {
-  async create({ name: account, password }: IUserRegistryRequest) {
-    const statement = `INSERT INTO users (name, password) VALUES(?, ?);`
-    const [rows] = await pool.promise().execute(statement, [account, password])
+  async create({ name, password }: IUserRegistryRequest) {
+    const statement = `INSERT INTO user (name, password) VALUES(?, ?);`
+    const rows = await pool.promise().execute(statement, [name, password])
 
     return rows
   }
 
   async findUserName(name: string) {
-    const statement = `SELECT * FROM users WHERE name = ?;`
-    const [rows] = await pool.promise().execute(statement, [name])
+    const statement = `SELECT * FROM user WHERE name = ?;`
+    const rows = (await pool.promise().execute(statement, [name])) as unknown as [IUser[], any]
 
     return rows
   }

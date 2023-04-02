@@ -2,7 +2,6 @@ import UserService from '../service/user.service'
 import { ACCOUNT_OR_PASSWORD_IS_EMPTY, ACCOUNT_HAS_EXIST } from '../constants/error.types'
 import { md5Password } from '../utils/handle-password'
 
-
 import type { RouterContext } from 'koa-router'
 import type { IUser, IUserRegistryRequest } from '../types/user.type'
 
@@ -15,8 +14,8 @@ export async function registryMiddleware(ctx: RouterContext, next: () => Promise
     return
   }
 
-  const hasName = await UserService.findUserName(name) as IUser[]
-  if (hasName.length > 0) {
+  const [users] = await UserService.findUserName(name)
+  if (users.length > 0) {
     const error = new Error(ACCOUNT_HAS_EXIST)
     ctx.app.emit('error', error, ctx)
     return

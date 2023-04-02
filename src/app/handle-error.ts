@@ -1,10 +1,16 @@
-import { ACCOUNT_OR_PASSWORD_IS_EMPTY, ACCOUNT_HAS_EXIST } from '../constants/error.types'
+import {
+  ACCOUNT_OR_PASSWORD_IS_EMPTY,
+  ACCOUNT_HAS_EXIST,
+  ACCOUNT_IS_NOT_EXIST,
+  PASSWORD_IS_ERROR,
+  TOKEN_INVALID,
+} from '../constants/error.types'
 
 import type { RouterContext } from 'koa-router'
 
-export function handleError(err: Error, ctx: RouterContext) {
+export default function handleError(err: Error, ctx: RouterContext) {
   const errorMsg = err.message
-  console.log(errorMsg)
+
   switch (errorMsg) {
     case ACCOUNT_OR_PASSWORD_IS_EMPTY:
       ctx.status = 400
@@ -13,6 +19,18 @@ export function handleError(err: Error, ctx: RouterContext) {
     case ACCOUNT_HAS_EXIST:
       ctx.status = 409
       ctx.body = 'account has exist'
+      break
+    case ACCOUNT_IS_NOT_EXIST:
+      ctx.status = 400
+      ctx.body = "account isn't exist"
+      break
+    case PASSWORD_IS_ERROR:
+      ctx.status = 400
+      ctx.body = 'password is error'
+      break
+    case TOKEN_INVALID:
+      ctx.status = 401
+      ctx.body = 'token is invalid'
       break
     default:
       ctx.status = 404
