@@ -13,9 +13,7 @@ class AuthController {
   }
 
   success(ctx: RouterContext<any, ITokenContext>, next: () => Promise<any>) {
-    console.log('auth token success')
-
-    ctx.body = ctx.info
+    ctx.body = ctx.user
   }
 }
 

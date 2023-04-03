@@ -5,9 +5,9 @@ import type { IUser, IUserRegistryRequest } from '../types/user.type'
 class UserService {
   async create({ name, password }: IUserRegistryRequest) {
     const statement = `INSERT INTO user (name, password) VALUES(?, ?);`
-    const rows = await pool.promise().execute(statement, [name, password])
+    const res = await pool.promise().execute(statement, [name, password])
 
-    return rows
+    return res
   }
 
   async findUserName(name: string) {

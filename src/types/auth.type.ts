@@ -17,5 +17,5 @@ export interface IJWTPayload extends JwtPayload {
 }
 
 export interface ITokenContext {
-  info: IJWTPayload
+  user: IJWTPayload
 }
