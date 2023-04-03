@@ -43,7 +43,10 @@ export async function verifyToken(ctx: RouterContext<any, ITokenContext>, next: 
   const token = ctx.header.authorization?.replace('Bearer ', '') ?? ''
 
   try {
-    ctx.info = jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256'] }) as IJWTPayload
+    ctx.user = jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256'] }) as IJWTPayload
+
+    console.log('auth success')
+
     await next()
   } catch {
     const error = new Error(TOKEN_INVALID)
