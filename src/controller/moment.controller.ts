@@ -1,30 +1,58 @@
 import momentService from '../service/moment.service'
 
-import type { RouterContext } from 'koa-router'
-import type { ICreateMomentContext, ICreateMomentReq, IGetAllMomentParams } from '../types/moment.type'
+import type { Next } from 'koa'
+import type { RouterContext } from '../types/base.type'
+import type { ICreateMomentReq, IGetAllMomentParams, IGetMomentRes, IPatchMomentBody } from '../types/moment.type'
+import type { ITokenContext } from '../types/auth.type'
 
 class MomentController {
-  async create(ctx: RouterContext<any, ICreateMomentContext>, next: () => Promise<any>) {
+  async create(ctx: RouterContext<ITokenContext, any>, next: Next) {
     const { content } = <ICreateMomentReq>ctx.request.body
-    const { id } = ctx.user
+    const id = ctx.user!.id
 
-    const [rows] = await momentService.create(id, content)
+    try {
+      const [rows] = await momentService.create(id, content)
 
-    ctx.body = rows
+      ctx.body = rows
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  async getSingle(ctx: RouterContext, next: () => Promise<any>) {
+  async getSingle(ctx: RouterContext<{}, IGetMomentRes[]>, next: Next) {
     const id = ctx.params.momentId ?? ''
-    const [rows] = await momentService.getSingle(id)
 
-    ctx.body = rows
+    try {
+      const [rows] = await momentService.getSingle(id)
+
+      ctx.body = rows
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  async getAll(ctx: RouterContext, next: () => Promise<any>) {
+  async getAll(ctx: RouterContext<{}, IGetMomentRes[]>, next: Next) {
     const { size, offset } = ctx.request.query as unknown as IGetAllMomentParams
-    const [rows] = await momentService.getAll(size, offset)
 
-    ctx.body = rows
+    try {
+      const [rows] = await momentService.getAll(size, offset)
+
+      ctx.body = rows
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async update(ctx: RouterContext<ITokenContext, any>, next: Next) {
+    const { content } = <IPatchMomentBody>ctx.request.body
+    const momentId = ctx.params.momentId
+
+    try {
+      const [rows] = await momentService.update(content, momentId)
+      ctx.body = rows
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

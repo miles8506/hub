@@ -1,6 +1,6 @@
-import pool from "../app/database"
+import pool from '../app/database'
 
-import type { IGetMomentRes } from "../types/moment.type"
+import type { IGetMomentRes } from '../types/moment.type'
 
 const getSQLStatement = `
   SELECT
@@ -18,21 +18,30 @@ class MomentService {
   }
 
   async getSingle(id: string) {
-    const statement =`
+    const statement = `
       ${getSQLStatement}
       WHERE m.id = ?;
     `
-    const res = await pool.promise().execute(statement, [id]) as unknown as [IGetMomentRes[], any]
+    const res = (await pool.promise().execute(statement, [id])) as unknown as [IGetMomentRes[], any]
 
     return res
   }
 
   async getAll(size: string, offset: string) {
-    const statement =`
+    const statement = `
       ${getSQLStatement}
       LIMIT ? OFFSET ?;
     `
-    const res = await pool.promise().execute(statement, [size, offset]) as unknown as [IGetMomentRes[], any]
+    const res = (await pool.promise().execute(statement, [size, offset])) as unknown as [IGetMomentRes[], any]
+
+    return res
+  }
+
+  async update(content: string, momentId: string) {
+    const statement = `
+      UPDATE moment SET moment.content = ? WHERE moment.id = ?;
+    `
+    const res = await pool.promise().execute(statement, [content, momentId]) as unknown as [any, any]
 
     return res
   }

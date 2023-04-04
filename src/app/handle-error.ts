@@ -4,6 +4,8 @@ import {
   ACCOUNT_IS_NOT_EXIST,
   PASSWORD_IS_ERROR,
   TOKEN_INVALID,
+  WITHOUT_PERMISSION,
+  NOT_FOUND_MOMENT_ID
 } from '../constants/error.types'
 
 import type { RouterContext } from 'koa-router'
@@ -31,6 +33,15 @@ export default function handleError(err: Error, ctx: RouterContext) {
     case TOKEN_INVALID:
       ctx.status = 401
       ctx.body = 'token is invalid'
+      break
+    case NOT_FOUND_MOMENT_ID:
+      ctx.status = 400
+      ctx.body = 'not found moment id'
+      break
+    case WITHOUT_PERMISSION:
+      console.log('123');
+      ctx.status = 401
+      ctx.body = 'without permission'
       break
     default:
       ctx.status = 404

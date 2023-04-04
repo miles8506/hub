@@ -6,6 +6,6 @@ const router = new Router()
 
 router.post('/login', verifyLogin, authController.login)
 
-router.post('/test', verifyToken, authController.success)
+// router.post('/test', verifyToken, authController.success)
 
 export default router

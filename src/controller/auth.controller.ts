@@ -1,18 +1,23 @@
 import jwt from 'jsonwebtoken'
 import { PRIVATE_KEY, EXPIRES_IN } from '../app/config'
 
-import type { RouterContext } from 'koa-router'
-import type { IAuthLoginContext, ITokenContext } from '../types/auth.type'
+import type { Next } from 'koa'
+import type { RouterContext } from '../types/base.type'
+import type { IAuthLoginContext, ITokenContext, IAuthLoginRes } from '../types/auth.type'
 
 class AuthController {
-  login(ctx: RouterContext<any, IAuthLoginContext>, next: () => Promise<any>) {
+  login(ctx: RouterContext<IAuthLoginContext, IAuthLoginRes>, next: Next) {
     const { id, name } = ctx.user
     const token = jwt.sign({ id, name }, PRIVATE_KEY, { expiresIn: EXPIRES_IN, algorithm: 'RS256' })
 
     ctx.body = { id, name, token }
   }
 
-  success(ctx: RouterContext<any, ITokenContext>, next: () => Promise<any>) {
+
+  /**
+   * test
+  */
+  success(ctx: RouterContext<ITokenContext>, next: Next) {
     ctx.body = ctx.user
   }
 }
