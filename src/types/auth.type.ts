@@ -1,10 +1,15 @@
-import type { RouterContext } from 'koa-router'
 import type { IUser } from './user.type'
 import type { JwtPayload } from 'jsonwebtoken'
 
 export interface IAuthLoginRequest {
   name: string
   password: string
+}
+
+export interface IAuthLoginRes {
+  id: number
+  name: string
+  token: string
 }
 
 export interface IAuthLoginContext {
@@ -17,5 +22,5 @@ export interface IJWTPayload extends JwtPayload {
 }
 
 export interface ITokenContext {
-  user: IJWTPayload
+  user?: IJWTPayload
 }
