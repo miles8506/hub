@@ -10,5 +10,6 @@ router.get('/', momentController.getAll)
 router.get('/:momentId', momentController.getSingle)
 router.post('/create', verifyToken, momentController.create)
 router.patch('/:momentId', verifyToken, verifyPermission, momentController.update)
+router.delete('/:momentId', verifyToken, verifyPermission, momentController.remove)
 
 export default router

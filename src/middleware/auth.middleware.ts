@@ -6,16 +6,16 @@ import {
   PASSWORD_IS_ERROR,
   TOKEN_INVALID,
   NOT_FOUND_MOMENT_ID,
-  WITHOUT_PERMISSION
+  WITHOUT_PERMISSION,
 } from '../constants/error.types'
 import userService from '../service/user.service'
 import authService from '../service/auth.service'
 import { md5Password } from '../utils/handle-password'
 import { PUBLIC_KEY } from '../app/config'
 
+import type { Next } from 'koa'
 import type { IAuthLoginRequest, IAuthLoginContext, ITokenContext, IJWTPayload } from '../types/auth.type'
-import { RouterContext } from '../types/base.type'
-import { Next } from 'koa'
+import type { RouterContext } from '../types/base.type'
 
 export async function verifyLogin(ctx: RouterContext<IAuthLoginContext>, next: Next) {
   const { name, password } = <IAuthLoginRequest>ctx.request.body
@@ -74,7 +74,7 @@ export async function verifyPermission(ctx: RouterContext<ITokenContext>, next: 
 
   try {
     const [rows] = await authService.checkMoment(id, momentId)
-    if (!(rows.length)) {
+    if (!rows.length) {
       const error = new Error(WITHOUT_PERMISSION)
       ctx.app.emit('error', error, ctx)
       return
