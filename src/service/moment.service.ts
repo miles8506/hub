@@ -41,7 +41,16 @@ class MomentService {
     const statement = `
       UPDATE moment SET moment.content = ? WHERE moment.id = ?;
     `
-    const res = await pool.promise().execute(statement, [content, momentId]) as unknown as [any, any]
+    const res = (await pool.promise().execute(statement, [content, momentId])) as unknown as [any, any]
+
+    return res
+  }
+
+  async remove(commentId: string) {
+    const statement = `
+      DELETE FROM moment WHERE moment.id = ?;
+    `
+    const res = pool.promise().execute(statement, [commentId]) as unknown as [any, any]
 
     return res
   }

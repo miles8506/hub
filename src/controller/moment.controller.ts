@@ -49,6 +49,19 @@ class MomentController {
 
     try {
       const [rows] = await momentService.update(content, momentId)
+
+      ctx.body = rows
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async remove(ctx: RouterContext<ITokenContext, any>, next: Next) {
+    const { momentId } = ctx.params
+
+    try {
+      const [rows] = await momentService.remove(momentId)
+
       ctx.body = rows
     } catch (error) {
       console.error(error)

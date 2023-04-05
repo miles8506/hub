@@ -5,7 +5,7 @@ import {
   PASSWORD_IS_ERROR,
   TOKEN_INVALID,
   WITHOUT_PERMISSION,
-  NOT_FOUND_MOMENT_ID
+  NOT_FOUND_MOMENT_ID,
 } from '../constants/error.types'
 
 import type { RouterContext } from 'koa-router'
@@ -39,7 +39,6 @@ export default function handleError(err: Error, ctx: RouterContext) {
       ctx.body = 'not found moment id'
       break
     case WITHOUT_PERMISSION:
-      console.log('123');
       ctx.status = 401
       ctx.body = 'without permission'
       break

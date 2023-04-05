@@ -13,10 +13,9 @@ class AuthController {
     ctx.body = { id, name, token }
   }
 
-
   /**
    * test
-  */
+   */
   success(ctx: RouterContext<ITokenContext>, next: Next) {
     ctx.body = ctx.user
   }

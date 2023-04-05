@@ -2,9 +2,7 @@ import type { ITokenContext } from './auth.type'
 import type { RouterContext } from './base.type'
 import type { Context } from 'koa'
 
-export interface ICreateMomentContext extends RouterContext<any, any> {
-
-}
+export interface ICreateMomentContext extends RouterContext<any, any> {}
 export interface ICreateMomentReq {
   content: string
 }
