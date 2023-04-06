@@ -63,17 +63,19 @@ export async function verifyToken(ctx: RouterContext<ITokenContext>, next: Next)
 }
 
 export async function verifyPermission(ctx: RouterContext<ITokenContext>, next: Next) {
+  const [key] = Object.keys(ctx.params)
+  const tableName = key.replace('Id', '')
+  const tid = ctx.params[key]
   const id = ctx.user!.id
-  const momentId = ctx.params.momentId
 
-  if (isNaN(+momentId)) {
+  if (isNaN(+tid)) {
     const error = new Error(NOT_FOUND_MOMENT_ID)
     ctx.app.emit('error', error, ctx)
     return
   }
 
   try {
-    const [rows] = await authService.checkMoment(id, momentId)
+    const [rows] = await authService.checkTable(tableName, id, tid)
     if (!rows.length) {
       const error = new Error(WITHOUT_PERMISSION)
       ctx.app.emit('error', error, ctx)
