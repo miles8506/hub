@@ -3,11 +3,11 @@ import pool from '../app/database'
 import type { IMomentOriginData } from '../types/moment.type'
 
 export class AuthService {
-  async checkMoment(id: number, momentId: string) {
+  async checkTable(tableName: string, id: number, tid: string) {
     const statement = `
-      SELECT * FROM moment WHERE moment.user_id = ? && moment.id = ?;
+      SELECT * FROM ${tableName} WHERE user_id = ? && id = ?;
     `
-    const res = (await pool.promise().execute(statement, [id, momentId])) as unknown as [IMomentOriginData[], any]
+    const res = (await pool.promise().execute(statement, [id, tid])) as unknown as [IMomentOriginData[], any]
 
     return res
   }
