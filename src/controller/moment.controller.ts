@@ -19,13 +19,13 @@ class MomentController {
     }
   }
 
-  async getSingle(ctx: RouterContext<{}, IGetMomentRes[]>, next: Next) {
+  async getSingle(ctx: RouterContext<{}, IGetMomentRes>, next: Next) {
     const id = ctx.params.momentId ?? ''
 
     try {
       const [rows] = await momentService.getSingle(id)
 
-      ctx.body = rows
+      ctx.body = rows[0]
     } catch (error) {
       console.error(error)
     }
