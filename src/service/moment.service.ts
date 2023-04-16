@@ -1,6 +1,6 @@
 import pool from '../app/database'
 
-import type { IGetMomentRes } from '../types/moment.type'
+import type { IGetMomentRes, ILabel } from '../types/moment.type'
 
 class MomentService {
   async create(id: number, content: string) {
@@ -15,13 +15,23 @@ class MomentService {
       SELECT
         m.id id, m.content, m.createAt, m.updateAt,
         JSON_OBJECT('id', u.id, 'name', u.name, 'createAt', u.createAt, 'updateAt', u.updateAt) author,
-        JSON_ARRAYAGG(
-          JSON_OBJECT('id', c.id, 'content', c.content, 'createAt', c.createAt, 'user', JSON_OBJECT('id', cu.id, 'name', cu.name))
-        ) comment_list
+        IF(
+          COUNT(ml.label_id),
+          JSON_ARRAYAGG(
+            JSON_OBJECT('id', l.id, 'name', l.name)
+          ),
+          NULL
+        ) labels,
+        (SELECT IF(
+          COUNT(c.id),
+          JSON_ARRAYAGG(
+            JSON_OBJECT('id', c.id, 'content', c.content, 'createAt', c.createAt, 'user', JSON_OBJECT('id', u.id, 'name', u.name))
+          ),
+          NULL) FROM comment c LEFT JOIN user u ON c.user_id = u.id WHERE c.moment_id = m.id) comment_list
       FROM moment m
       LEFT JOIN user u ON m.user_id = u.id
-      LEFT JOIN comment c ON c.moment_id = m.id
-      LEFT JOIN user cu ON cu.id = c.user_id
+      LEFT JOIN moment_label ml ON ml.moment_id = m.id
+      LEFT JOIN label l ON ml.label_id = l.id
       WHERE m.id = ?
       GROUP BY m.id;
     `
@@ -35,11 +45,13 @@ class MomentService {
       SELECT
         m.id id, m.content, m.createAt, m.updateAt,
         JSON_OBJECT('id', u.id, 'name', u.name, 'createAt', u.createAt, 'updateAt', u.updateAt) author,
-        (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) comment_count
-      FROM moment m LEFT JOIN user u ON m.user_id = u.id
+        (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) comment_count,
+        (SELECT COUNT(*) FROM moment_label ml WHERE ml.moment_id = m.id) label_count
+      FROM moment m
+      LEFT JOIN user u ON m.user_id = u.id
       LIMIT ? OFFSET ?;
     `
-    const res = (await pool.promise().execute(statement, [size, offset])) as unknown as [IGetMomentRes[], any]
+    const res = await pool.promise().execute(statement, [size, offset]) as unknown as [IGetMomentRes[], any]
 
     return res
   }
@@ -58,6 +70,24 @@ class MomentService {
       DELETE FROM moment WHERE moment.id = ?;
     `
     const res = pool.promise().execute(statement, [commentId]) as unknown as [any, any]
+
+    return res
+  }
+
+  async hasId(momentId: string, labelId: number) {
+    const statement = `
+      SELECT * from moment_label ml WHERE ml.moment_id = ? && ml.label_id = ?;
+    `
+    const res = await pool.promise().execute(statement, [momentId, labelId]) as unknown as [ILabel[], any]
+
+    return res
+  }
+
+  async addLabel(momentId: string, labelId: number) {
+    const statement = `
+      INSERT INTO moment_label (moment_id, label_id) VALUES (?, ?);
+    `
+    const res = await pool.promise().execute(statement, [momentId, labelId]) as unknown as [any, any]
 
     return res
   }
