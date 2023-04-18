@@ -13,7 +13,7 @@ class UserService {
   async findUserName(name: string) {
     const statement = `SELECT * FROM user WHERE name = ?;`
     const rows = (await pool.promise().execute(statement, [name])) as unknown as [IUser[], any]
-
+    console.log(rows);
     return rows
   }
 }

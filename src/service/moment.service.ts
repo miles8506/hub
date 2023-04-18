@@ -14,7 +14,7 @@ class MomentService {
     const statement = `
       SELECT
         m.id id, m.content, m.createAt, m.updateAt,
-        JSON_OBJECT('id', u.id, 'name', u.name, 'createAt', u.createAt, 'updateAt', u.updateAt) author,
+        JSON_OBJECT('id', u.id, 'name', u.name, 'createAt', u.createAt, 'updateAt', u.updateAt, 'avatar_url', u.avatar_url) author,
         IF(
           COUNT(ml.label_id),
           JSON_ARRAYAGG(
@@ -25,7 +25,7 @@ class MomentService {
         (SELECT IF(
           COUNT(c.id),
           JSON_ARRAYAGG(
-            JSON_OBJECT('id', c.id, 'content', c.content, 'createAt', c.createAt, 'user', JSON_OBJECT('id', u.id, 'name', u.name))
+            JSON_OBJECT('id', c.id, 'content', c.content, 'createAt', c.createAt, 'user', JSON_OBJECT('id', u.id, 'name', u.name, 'avatar_url', u.avatar_url))
           ),
           NULL) FROM comment c LEFT JOIN user u ON c.user_id = u.id WHERE c.moment_id = m.id) comment_list
       FROM moment m
