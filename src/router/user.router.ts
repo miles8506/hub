@@ -5,5 +5,6 @@ import { registryMiddleware, handlePassword } from '../middleware/user.middlewar
 const router = new Router({ prefix: '/user' })
 
 router.post('/user', registryMiddleware, handlePassword, userController.create)
+router.get('/:userId/avatar', userController.avatar)
 
 export default router

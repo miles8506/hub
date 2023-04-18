@@ -2,7 +2,13 @@ import momentService from '../service/moment.service'
 
 import type { Next } from 'koa'
 import type { RouterContext } from '../types/base.type'
-import type { ICreateMomentReq, IGetAllMomentParams, IGetMomentRes, IPatchMomentBody } from '../types/moment.type'
+import type {
+  ICreateMomentReq,
+  IGetAllMomentParams,
+  IGetMomentRes,
+  ILabels,
+  IPatchMomentBody,
+} from '../types/moment.type'
 import type { ITokenContext } from '../types/auth.type'
 
 class MomentController {
@@ -19,13 +25,13 @@ class MomentController {
     }
   }
 
-  async getSingle(ctx: RouterContext<{}, IGetMomentRes[]>, next: Next) {
+  async getSingle(ctx: RouterContext<{}, IGetMomentRes>, next: Next) {
     const id = ctx.params.momentId ?? ''
 
     try {
       const [rows] = await momentService.getSingle(id)
 
-      ctx.body = rows
+      ctx.body = rows[0]
     } catch (error) {
       console.error(error)
     }
@@ -63,6 +69,22 @@ class MomentController {
       const [rows] = await momentService.remove(momentId)
 
       ctx.body = rows
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async addLabel(ctx: RouterContext<ITokenContext & ILabels>, next: Next) {
+    const labels = ctx.labels!
+    const { momentId } = ctx.params
+
+    try {
+      for (const label of labels) {
+        const [rows] = await momentService.hasId(momentId, label.id)
+        if (!rows[0]) await momentService.addLabel(momentId, label.id)
+      }
+
+      ctx.body = 'add labels is successful'
     } catch (error) {
       console.error(error)
     }

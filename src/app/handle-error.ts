@@ -6,6 +6,7 @@ import {
   TOKEN_INVALID,
   WITHOUT_PERMISSION,
   NOT_FOUND_MOMENT_ID,
+  LABEL_HAS_EXIST
 } from '../constants/error.types'
 
 import type { RouterContext } from 'koa-router'
@@ -41,6 +42,10 @@ export default function handleError(err: Error, ctx: RouterContext) {
     case WITHOUT_PERMISSION:
       ctx.status = 401
       ctx.body = 'without permission'
+      break
+    case LABEL_HAS_EXIST:
+      ctx.status = 400
+      ctx.body = 'label name has exist'
       break
     default:
       ctx.status = 404

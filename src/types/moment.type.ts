@@ -38,3 +38,21 @@ export interface IUpdateMomentContext extends ITokenContext {}
 export interface IPatchMomentBody {
   content: string
 }
+
+
+export interface IAddLabelBody {
+  labels: string[] | number[]
+}
+
+export type LabelType = { id: number, name: string }
+
+export interface ILabels {
+  labels?: LabelType[]
+}
+
+export interface ILabel {
+  moment_id: number
+  label_id: number
+  createAt: string
+  updateAt: string
+}
